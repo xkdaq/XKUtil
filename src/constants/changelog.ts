@@ -1,4 +1,4 @@
-export const APP_VERSION = "0.2.0";
+export const APP_VERSION = "0.3.0";
 
 export interface ChangelogEntry {
   version: string;
@@ -7,6 +7,17 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "0.3.0",
+    date: "2026-05-16",
+    changes: [
+      "新增 配置生成器工具（文本处理类）",
+      "从结构化文本自动解析生成 key=value 配置",
+      "支持 DNS 解析域名获取真实 IP",
+      "新增独立域名解析功能（输入域名获取 IP，支持复制）",
+      "正则规则与 Java 版本保持一致",
+    ],
+  },
   {
     version: "0.2.0",
     date: "2026-05-16",

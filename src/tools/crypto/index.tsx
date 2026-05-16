@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { LockOutlined } from "@ant-design/icons";
+import { LockOutlined, NumberOutlined } from "@ant-design/icons";
 import { ToolDefinition } from "../types";
 
 export const cryptoTools: ToolDefinition[] = [
@@ -12,5 +12,15 @@ export const cryptoTools: ToolDefinition[] = [
     path: "/crypto/aes",
     component: lazy(() => import("./AesCrypto")),
     keywords: ["aes", "encrypt", "decrypt", "crypto", "cipher"],
+  },
+  {
+    id: "hashcode",
+    name: "HashCode",
+    description: "Java 风格字符串 hashCode 计算",
+    category: "crypto",
+    icon: <NumberOutlined />,
+    path: "/crypto/hashcode",
+    component: lazy(() => import("./HashCode")),
+    keywords: ["hash", "hashcode", "java", "string"],
   },
 ];

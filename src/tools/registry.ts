@@ -1,8 +1,9 @@
 import { ToolCategory, ToolDefinition } from "./types";
 import { jsonTools } from "./json";
 import { cryptoTools } from "./crypto";
+import { textTools } from "./text";
 
-const allTools: ToolDefinition[] = [...jsonTools, ...cryptoTools];
+const allTools: ToolDefinition[] = [...jsonTools, ...cryptoTools, ...textTools];
 
 export function getToolCategories(): ToolCategory[] {
   const categoryMap = new Map<string, ToolCategory>();
