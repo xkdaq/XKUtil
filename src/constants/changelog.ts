@@ -15,6 +15,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       "从结构化文本自动解析生成 key=value 配置",
       "支持 DNS 解析域名获取真实 IP",
       "新增独立域名解析功能（输入域名获取 IP，支持复制）",
+      "新增 Java String HashCode 计算工具（加密工具类）",
       "正则规则与 Java 版本保持一致",
     ],
   },
