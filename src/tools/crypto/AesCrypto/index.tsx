@@ -35,6 +35,7 @@ export default function AesCrypto() {
     mode: "CBC",
     padding: "Pkcs7",
     outputFormat: "Base64",
+    keyFormat: "UTF-8",
     keySize: 128,
   });
   const [keyValue, setKeyValue] = useState("");
@@ -96,7 +97,7 @@ export default function AesCrypto() {
     setBruteForceInfo(null);
 
     for (const pair of keystoreKeys) {
-      const tryConfig: AesConfig = { ...config, keySize: pair.keySize };
+      const tryConfig: AesConfig = { ...config, keySize: pair.keySize, keyFormat: pair.keyFormat ?? "UTF-8" };
       const result = aesDecrypt(input, pair.key, pair.iv, tryConfig);
       if (result.success && result.data && isValidDecryption(result.data)) {
         setOutput(result.data);
@@ -138,6 +139,7 @@ export default function AesCrypto() {
         label: values.label,
         key: values.key,
         iv: values.iv,
+        keyFormat: config.keyFormat,
         keySize: config.keySize,
       });
       message.success("密钥对已保存");
@@ -148,7 +150,7 @@ export default function AesCrypto() {
   const handleLoadKey = (pair: SavedKeyPair) => {
     setKeyValue(pair.key);
     setIvValue(pair.iv);
-    setConfig((c) => ({ ...c, keySize: pair.keySize }));
+    setConfig((c) => ({ ...c, keySize: pair.keySize, keyFormat: pair.keyFormat ?? "UTF-8" }));
     message.success(`已加载密钥: ${pair.label}`);
   };
 
@@ -165,6 +167,7 @@ export default function AesCrypto() {
           keyValue={keyValue}
           ivValue={ivValue}
           keySize={config.keySize}
+          keyFormat={config.keyFormat}
           mode={config.mode}
           keystoreCount={keystoreKeys.length}
           onKeyChange={setKeyValue}

@@ -3,12 +3,14 @@ import CryptoJS from "crypto-js";
 export type AesMode = "ECB" | "CBC" | "CFB" | "OFB" | "CTR";
 export type AesPadding = "Pkcs7" | "ZeroPadding" | "NoPadding";
 export type OutputFormat = "Base64" | "Hex";
+export type KeyFormat = "Hex" | "UTF-8";
 export type KeySize = 128 | 192 | 256;
 
 export interface AesConfig {
   mode: AesMode;
   padding: AesPadding;
   outputFormat: OutputFormat;
+  keyFormat: KeyFormat;
   keySize: KeySize;
 }
 
@@ -32,6 +34,28 @@ const PADDING_MAP: Record<AesPadding, typeof CryptoJS.pad.Pkcs7> = {
   NoPadding: CryptoJS.pad.NoPadding,
 };
 
+function parseKeyBytes(key: string, format: KeyFormat): CryptoJS.lib.WordArray {
+  if (format === "Hex") {
+    return CryptoJS.enc.Hex.parse(key);
+  }
+  return CryptoJS.enc.Utf8.parse(key);
+}
+
+function getExpectedKeyLength(keySize: KeySize, format: KeyFormat): { bytes: number; display: string } {
+  const bytes = keySize / 8;
+  if (format === "Hex") {
+    return { bytes, display: `${bytes * 2} 个十六进制字符` };
+  }
+  return { bytes, display: `${bytes} 个字符` };
+}
+
+function getExpectedIVLength(format: KeyFormat): { bytes: number; display: string } {
+  if (format === "Hex") {
+    return { bytes: 16, display: "32 个十六进制字符" };
+  }
+  return { bytes: 16, display: "16 个字符" };
+}
+
 export function aesEncrypt(
   plaintext: string,
   key: string,
@@ -39,12 +63,12 @@ export function aesEncrypt(
   config: AesConfig
 ): AesResult {
   try {
-    const keyBytes = CryptoJS.enc.Hex.parse(key);
-    const expectedKeyLen = config.keySize / 8;
-    if (keyBytes.sigBytes !== expectedKeyLen) {
+    const keyBytes = parseKeyBytes(key, config.keyFormat);
+    const expected = getExpectedKeyLength(config.keySize, config.keyFormat);
+    if (keyBytes.sigBytes !== expected.bytes) {
       return {
         success: false,
-        error: `密钥长度错误: 期望 ${expectedKeyLen * 2} 个十六进制字符 (${config.keySize} 位), 实际 ${key.length} 个字符`,
+        error: `密钥长度错误: 期望 ${expected.display} (${config.keySize} 位), 实际 ${key.length} 个字符`,
       };
     }
 
@@ -54,11 +78,12 @@ export function aesEncrypt(
     };
 
     if (config.mode !== "ECB") {
-      const ivBytes = CryptoJS.enc.Hex.parse(iv);
-      if (ivBytes.sigBytes !== 16) {
+      const ivBytes = parseKeyBytes(iv, config.keyFormat);
+      const ivExpected = getExpectedIVLength(config.keyFormat);
+      if (ivBytes.sigBytes !== ivExpected.bytes) {
         return {
           success: false,
-          error: `IV 长度错误: 期望 32 个十六进制字符 (16 字节), 实际 ${iv.length} 个字符`,
+          error: `IV 长度错误: 期望 ${ivExpected.display} (16 字节), 实际 ${iv.length} 个字符`,
         };
       }
       options.iv = ivBytes;
@@ -86,12 +111,12 @@ export function aesDecrypt(
   config: AesConfig
 ): AesResult {
   try {
-    const keyBytes = CryptoJS.enc.Hex.parse(key);
-    const expectedKeyLen = config.keySize / 8;
-    if (keyBytes.sigBytes !== expectedKeyLen) {
+    const keyBytes = parseKeyBytes(key, config.keyFormat);
+    const expected = getExpectedKeyLength(config.keySize, config.keyFormat);
+    if (keyBytes.sigBytes !== expected.bytes) {
       return {
         success: false,
-        error: `密钥长度错误: 期望 ${expectedKeyLen * 2} 个十六进制字符 (${config.keySize} 位), 实际 ${key.length} 个字符`,
+        error: `密钥长度错误: 期望 ${expected.display} (${config.keySize} 位), 实际 ${key.length} 个字符`,
       };
     }
 
@@ -101,11 +126,12 @@ export function aesDecrypt(
     };
 
     if (config.mode !== "ECB") {
-      const ivBytes = CryptoJS.enc.Hex.parse(iv);
-      if (ivBytes.sigBytes !== 16) {
+      const ivBytes = parseKeyBytes(iv, config.keyFormat);
+      const ivExpected = getExpectedIVLength(config.keyFormat);
+      if (ivBytes.sigBytes !== ivExpected.bytes) {
         return {
           success: false,
-          error: `IV 长度错误: 期望 32 个十六进制字符 (16 字节), 实际 ${iv.length} 个字符`,
+          error: `IV 长度错误: 期望 ${ivExpected.display} (16 字节), 实际 ${iv.length} 个字符`,
         };
       }
       options.iv = ivBytes;
@@ -135,12 +161,33 @@ export function aesDecrypt(
   }
 }
 
-export function generateRandomKey(size: KeySize): string {
-  return CryptoJS.lib.WordArray.random(size / 8).toString(CryptoJS.enc.Hex);
+export function generateRandomKey(size: KeySize, format: KeyFormat = "Hex"): string {
+  const bytes = CryptoJS.lib.WordArray.random(size / 8);
+  if (format === "Hex") {
+    return bytes.toString(CryptoJS.enc.Hex);
+  }
+  // Generate printable ASCII characters for UTF-8 mode
+  const len = size / 8;
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+  let result = "";
+  for (let i = 0; i < len; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
 
-export function generateRandomIV(): string {
-  return CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
+export function generateRandomIV(format: KeyFormat = "Hex"): string {
+  const bytes = CryptoJS.lib.WordArray.random(16);
+  if (format === "Hex") {
+    return bytes.toString(CryptoJS.enc.Hex);
+  }
+  const len = 16;
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+  let result = "";
+  for (let i = 0; i < len; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
 
 export function validateKeyLength(key: string, expectedSize: KeySize): boolean {

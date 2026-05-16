@@ -4,13 +4,14 @@ import {
   SaveOutlined,
   DatabaseOutlined,
 } from "@ant-design/icons";
-import type { AesMode, KeySize } from "../../../utils/crypto";
+import type { AesMode, KeyFormat, KeySize } from "../../../utils/crypto";
 import { generateRandomKey, generateRandomIV } from "../../../utils/crypto";
 
 interface KeyPanelProps {
   keyValue: string;
   ivValue: string;
   keySize: KeySize;
+  keyFormat: KeyFormat;
   mode: AesMode;
   keystoreCount: number;
   onKeyChange: (key: string) => void;
@@ -23,6 +24,7 @@ export function KeyPanel({
   keyValue,
   ivValue,
   keySize,
+  keyFormat,
   mode,
   keystoreCount,
   onKeyChange,
@@ -30,20 +32,31 @@ export function KeyPanel({
   onSave,
   onOpenKeystore,
 }: KeyPanelProps) {
-  const expectedKeyLen = (keySize / 8) * 2;
+  const expectedKeyBytes = keySize / 8;
+  const expectedKeyChars = keyFormat === "Hex" ? expectedKeyBytes * 2 : expectedKeyBytes;
+  const expectedIVChars = keyFormat === "Hex" ? 32 : 16;
+
   const keyStatus =
     keyValue.length === 0
       ? undefined
-      : keyValue.length === expectedKeyLen && /^[0-9a-fA-F]*$/.test(keyValue)
+      : keyValue.length === expectedKeyChars
         ? ("" as const)
         : ("error" as const);
 
   const ivStatus =
     mode === "ECB" || ivValue.length === 0
       ? undefined
-      : ivValue.length === 32 && /^[0-9a-fA-F]*$/.test(ivValue)
+      : ivValue.length === expectedIVChars
         ? ("" as const)
         : ("error" as const);
+
+  const keyPlaceholder = keyFormat === "Hex"
+    ? `Hex 格式, ${expectedKeyChars} 个字符`
+    : `UTF-8 字符串, ${expectedKeyChars} 个字符`;
+
+  const ivPlaceholder = keyFormat === "Hex"
+    ? `Hex 格式, ${expectedIVChars} 个字符`
+    : `UTF-8 字符串, ${expectedIVChars} 个字符`;
 
   return (
     <Space direction="vertical" size={8} style={{ width: "100%" }}>
@@ -52,14 +65,14 @@ export function KeyPanel({
           addonBefore="Key"
           value={keyValue}
           onChange={(e) => onKeyChange(e.target.value)}
-          placeholder={`Hex 格式, ${expectedKeyLen} 个字符`}
+          placeholder={keyPlaceholder}
           status={keyStatus}
           style={{ fontFamily: "monospace", fontSize: 12 }}
         />
         <Tooltip title="随机生成">
           <Button
             icon={<ThunderboltOutlined />}
-            onClick={() => onKeyChange(generateRandomKey(keySize))}
+            onClick={() => onKeyChange(generateRandomKey(keySize, keyFormat))}
           />
         </Tooltip>
       </Space.Compact>
@@ -68,7 +81,7 @@ export function KeyPanel({
           addonBefore="IV"
           value={ivValue}
           onChange={(e) => onIvChange(e.target.value)}
-          placeholder="Hex 格式, 32 个字符"
+          placeholder={ivPlaceholder}
           disabled={mode === "ECB"}
           status={ivStatus}
           style={{ fontFamily: "monospace", fontSize: 12 }}
@@ -76,7 +89,7 @@ export function KeyPanel({
         <Tooltip title="随机生成">
           <Button
             icon={<ThunderboltOutlined />}
-            onClick={() => onIvChange(generateRandomIV())}
+            onClick={() => onIvChange(generateRandomIV(keyFormat))}
             disabled={mode === "ECB"}
           />
         </Tooltip>

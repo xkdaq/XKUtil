@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { KeySize } from "../utils/crypto";
+import type { KeyFormat, KeySize } from "../utils/crypto";
 
 export interface SavedKeyPair {
   id: string;
   label: string;
   key: string;
   iv: string;
+  keyFormat: KeyFormat;
   keySize: KeySize;
   createdAt: number;
 }

@@ -1,5 +1,5 @@
 import { Select, Space } from "antd";
-import type { AesMode, AesPadding, OutputFormat, KeySize, AesConfig } from "../../../utils/crypto";
+import type { AesMode, AesPadding, OutputFormat, KeyFormat, KeySize, AesConfig } from "../../../utils/crypto";
 
 interface ConfigPanelProps {
   config: AesConfig;
@@ -22,6 +22,11 @@ const PADDING_OPTIONS: { value: AesPadding; label: string }[] = [
 
 const FORMAT_OPTIONS: { value: OutputFormat; label: string }[] = [
   { value: "Base64", label: "Base64" },
+  { value: "Hex", label: "Hex" },
+];
+
+const KEY_FORMAT_OPTIONS: { value: KeyFormat; label: string }[] = [
+  { value: "UTF-8", label: "UTF-8" },
   { value: "Hex", label: "Hex" },
 ];
 
@@ -60,6 +65,16 @@ export function ConfigPanel({ config, onChange }: ConfigPanelProps) {
           value={config.outputFormat}
           onChange={(outputFormat) => onChange({ ...config, outputFormat })}
           options={FORMAT_OPTIONS}
+          style={{ width: 90 }}
+          size="small"
+        />
+      </Space>
+      <Space size={4}>
+        <span>密钥格式:</span>
+        <Select
+          value={config.keyFormat}
+          onChange={(keyFormat) => onChange({ ...config, keyFormat })}
+          options={KEY_FORMAT_OPTIONS}
           style={{ width: 90 }}
           size="small"
         />
