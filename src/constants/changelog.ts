@@ -1,4 +1,4 @@
-export const APP_VERSION = "0.3.0";
+export const APP_VERSION = "0.4.0";
 
 export interface ChangelogEntry {
   version: string;
@@ -8,6 +8,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "0.4.0",
+    date: "2026-05-16",
+    changes: [
+      "新增 翻译工具（文本处理类）",
+      "支持百度翻译、有道翻译、阿里翻译、腾讯翻译四大平台",
+      "可配置各平台 API Key，持久化保存",
+      "支持中/英/日/韩/法/德/俄等 12 种语言互译",
+      "源语言支持自动检测",
+      "更新应用图标",
+    ],
+  },
+  {
     version: "0.3.0",
     date: "2026-05-16",
     changes: [
@@ -16,6 +28,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       "支持 DNS 解析域名获取真实 IP",
       "新增独立域名解析功能（输入域名获取 IP，支持复制）",
       "新增 Java String HashCode 计算工具（加密工具类）",
+      "新增行为打点配置生成工具（基于 MD5 截取 + 前缀拼接）",
       "正则规则与 Java 版本保持一致",
     ],
   },

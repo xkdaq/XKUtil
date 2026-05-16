@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { FileTextOutlined } from "@ant-design/icons";
+import { FileTextOutlined, TranslationOutlined } from "@ant-design/icons";
 import { ToolDefinition } from "../types";
 
 export const textTools: ToolDefinition[] = [
@@ -12,5 +12,15 @@ export const textTools: ToolDefinition[] = [
     path: "/text/config-generator",
     component: lazy(() => import("./ConfigGenerator")),
     keywords: ["config", "generator", "parse", "配置", "生成"],
+  },
+  {
+    id: "translate",
+    name: "翻译工具",
+    description: "多平台翻译工具，支持百度/有道/阿里/腾讯翻译",
+    category: "text",
+    icon: <TranslationOutlined />,
+    path: "/text/translate",
+    component: lazy(() => import("./Translate")),
+    keywords: ["translate", "翻译", "百度", "有道", "阿里", "腾讯"],
   },
 ];

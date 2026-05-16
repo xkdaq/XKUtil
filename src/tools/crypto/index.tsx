@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { LockOutlined, NumberOutlined } from "@ant-design/icons";
+import { LockOutlined, NumberOutlined, NodeIndexOutlined } from "@ant-design/icons";
 import { ToolDefinition } from "../types";
 
 export const cryptoTools: ToolDefinition[] = [
@@ -22,5 +22,15 @@ export const cryptoTools: ToolDefinition[] = [
     path: "/crypto/hashcode",
     component: lazy(() => import("./HashCode")),
     keywords: ["hash", "hashcode", "java", "string"],
+  },
+  {
+    id: "event-mapping",
+    name: "打点配置生成",
+    description: "基于 MD5 生成行为打点事件映射配置",
+    category: "crypto",
+    icon: <NodeIndexOutlined />,
+    path: "/crypto/event-mapping",
+    component: lazy(() => import("./EventMapping")),
+    keywords: ["event", "mapping", "md5", "打点", "埋点"],
   },
 ];

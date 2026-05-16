@@ -1,6 +1,6 @@
 {
   "name": "xkutil",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,11 +16,14 @@
     "@tauri-apps/plugin-clipboard-manager": "^2.2.1",
     "@tauri-apps/plugin-dialog": "^2.2.0",
     "@tauri-apps/plugin-fs": "^2.2.0",
+    "@tauri-apps/plugin-http": "^2.5.9",
     "antd": "^5.24.0",
     "crypto-js": "^4.2.0",
+    "png2ico": "^0.4.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0",
+    "to-ico": "^1.1.5",
     "zustand": "^5.0.5"
   },
   "devDependencies": {

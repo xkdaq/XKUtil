@@ -10,6 +10,16 @@
     "dialog:allow-open",
     "dialog:allow-save",
     "fs:allow-read-text-file",
-    "fs:allow-write-text-file"
+    "fs:allow-write-text-file",
+    {
+      "identifier": "http:default",
+      "allow": [
+        { "url": "https://fanyi-api.baidu.com/**" },
+        { "url": "https://openapi.youdao.com/**" },
+        { "url": "https://mt.cn-hangzhou.aliyuncs.com/**" },
+        { "url": "https://tmt.tencentcloudapi.com/**" },
+        { "url": "https://dns.alidns.com/**" }
+      ]
+    }
   ]
 }
