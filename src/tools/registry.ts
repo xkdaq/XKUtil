@@ -2,8 +2,14 @@ import { ToolCategory, ToolDefinition } from "./types";
 import { jsonTools } from "./json";
 import { cryptoTools } from "./crypto";
 import { textTools } from "./text";
+import { convertTools } from "./convert";
 
-const allTools: ToolDefinition[] = [...jsonTools, ...cryptoTools, ...textTools];
+const allTools: ToolDefinition[] = [
+  ...jsonTools,
+  ...cryptoTools,
+  ...textTools,
+  ...convertTools,
+];
 
 export function getToolCategories(): ToolCategory[] {
   const categoryMap = new Map<string, ToolCategory>();
@@ -34,6 +40,7 @@ function getCategoryName(categoryId: string): string {
     text: "文本处理",
     network: "网络工具",
     crypto: "加密工具",
+    convert: "格式转换",
   };
   return names[categoryId] ?? categoryId;
 }

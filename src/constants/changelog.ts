@@ -1,4 +1,4 @@
-export const APP_VERSION = "0.4.0";
+export const APP_VERSION = "0.5.0";
 
 export interface ChangelogEntry {
   version: string;
@@ -7,6 +7,17 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "0.5.0",
+    date: "2026-05-17",
+    changes: [
+      "新增 格式转换工具分类",
+      "新增 Word 转 HTML 工具（支持 .docx 文件转换为 HTML）",
+      "支持 HTML 代码查看与实时预览（左右分栏）",
+      "支持复制 HTML 代码、下载为 HTML 文件",
+      "转换时自动忽略图片并提示忽略数量",
+    ],
+  },
   {
     version: "0.4.0",
     date: "2026-05-16",
