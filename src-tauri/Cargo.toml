@@ -1,6 +1,6 @@
 [package]
 name = "xkutil"
-version = "0.1.0"
+version = "0.6.0"
 description = "A cross-platform developer toolbox"
 authors = ["xuke"]
 edition = "2021"

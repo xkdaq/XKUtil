@@ -18,24 +18,24 @@ import { generateConfig, formatOutput, getRealIpViaApi } from "../../../utils/co
 
 const { TextArea } = Input;
 
-const PLACEHOLDER = `应用名: RupeeFlow
-包名: com.rupeeflow.creditpath
-假包名: com.rupeeflow.credit.path
-官网域名: rupeeflowcard.com
-app域名: flowcreditoffcial.com
-app备用域名: limitstride.com
+const PLACEHOLDER = `应用名: MyApp
+包名: com.example.myapp
+假包名: com.example.my.app
+官网域名: example.com
+app域名: app.example.com
+app备用域名: backup.example.com
 后台配置:
-  package_key: IQzleWdkwZYGmmPH
-  sign_key: Bhklh7rJVDQeeNEh
-  aes_key: 7W7ds2BQR8aPLuLYOwqZMnL8EET3fjsu
-  aes_iv: n1SdS35R0UaBj8UD
+  package_key: <package_key>
+  sign_key: <sign_key>
+  aes_key: <aes_key>
+  aes_iv: <aes_iv>
 中转服务器配置:
-  aes_key: 7W7ds2BQR8aPLuLYOwqZMnL8EET3fjsu
-  aes_iv: n1SdS35R0UaBj8UD
+  aes_key: <aes_key>
+  aes_iv: <aes_iv>
 正式环境接口:
-  - https://xxx.example.com/orderapi/    入口
-  - https://xxx.example.com/objectquery/    安卓 H5
-  - https://xxx.example.com/cdntempfiles/    静态资源`;
+  - https://api.example.com/orderapi/    入口
+  - https://api.example.com/objectquery/    安卓 H5
+  - https://api.example.com/cdntempfiles/    静态资源`;
 
 export default function ConfigGenerator() {
   const [input, setInput] = useState("");

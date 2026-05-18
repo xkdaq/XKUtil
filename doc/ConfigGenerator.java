@@ -10,24 +10,24 @@ import java.util.regex.Pattern;
 
 public class ConfigGenerator {
 
-    static String content = "应用名: RupeeFlow\n" +
-            "包名: com.rupeeflow.creditpath\n" +
-            "假包名: com.rupeeflow.credit.path\n" +
-            "官网域名: rupeeflowcard.com\n" +
-            "app域名: flowcreditoffcial.com\n" +
-            "app备用域名: limitstride.com\n" +
+    static String content = "应用名: MyApp\n" +
+            "包名: com.example.myapp\n" +
+            "假包名: com.example.my.app\n" +
+            "官网域名: example.com\n" +
+            "app域名: app.example.com\n" +
+            "app备用域名: backup.example.com\n" +
             "后台配置:\n" +
-            "  package_key: IQzleWdkwZYGmmPH\n" +
-            "  sign_key: Bhklh7rJVDQeeNEh\n" +
-            "  aes_key: 7W7ds2BQR8aPLuLYOwqZMnL8EET3fjsu\n" +
-            "  aes_iv: n1SdS35R0UaBj8UD\n" +
+            "  package_key: <package_key>\n" +
+            "  sign_key: <sign_key>\n" +
+            "  aes_key: <aes_key>\n" +
+            "  aes_iv: <aes_iv>\n" +
             "中转服务器配置:\n" +
-            "  aes_key: 7W7ds2BQR8aPLuLYOwqZMnL8EET3fjsu\n" +
-            "  aes_iv: n1SdS35R0UaBj8UD\n" +
+            "  aes_key: <aes_key>\n" +
+            "  aes_iv: <aes_iv>\n" +
             "正式环境接口:\n" +
-            "  - https://ictiveli.flowcreditoffcial.com/orderapi/    入口\n" +
-            "  - https://ictiveli.flowcreditoffcial.com/objectquery/    安卓 H5\n" +
-            "  - https://ictiveli.flowcreditoffcial.com/cdntempfiles/    静态资源（APK/前端图片）";
+            "  - https://api.example.com/orderapi/    入口\n" +
+            "  - https://api.example.com/objectquery/    安卓 H5\n" +
+            "  - https://api.example.com/cdntempfiles/    静态资源（APK/前端图片）";
 
     public static void main(String[] args) {
 

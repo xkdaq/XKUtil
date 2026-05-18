@@ -41,7 +41,7 @@ export async function getRealIpViaApi(host: string): Promise<string | null> {
  * 主解析逻辑（对应 Java 的 main 方法）
  *
  * 规则：
- * 1. server = 正式环境接口第一个 URL 域名的 DNS 解析 IP
+ * 1. server = 正式环境接口/测试环境接口/入口 第一个 URL 域名的 DNS 解析 IP
  * 2. CRYPT_TYPE = "AES"（固定值）
  * 3. REQUEST_KEY = 中转服务器配置的 aes_key,aes_iv
  * 4. PACKAGE = 包名
@@ -52,9 +52,19 @@ export async function generateConfig(content: string): Promise<GeneratorResult> 
   try {
     const result: Record<string, string> = {};
 
-    // 1. 解析 Server (提取正式环境接口第一个域名的 IP)
-    // 正则: 正式环境接口:\s*-\s*(https?://[^/\s#]+)
-    const officialApi = getFirstMatch(content, "正式环境接口:\\s*-\\s*(https?://[^/\\s#]+)");
+    // 1. 解析 Server (提取接口 section 第一个域名的 IP)
+    // 兼容 key: 正式环境接口 / 测试环境接口 / 入口
+    // 优先级: 正式环境接口 > 测试环境接口 > 入口（行内注释形式）
+    const apiSectionKeys = ["正式环境接口", "测试环境接口"];
+    let officialApi: string | null = null;
+    for (const key of apiSectionKeys) {
+      officialApi = getFirstMatch(content, key + ":\\s*-\\s*(https?://[^/\\s#]+)");
+      if (officialApi) break;
+    }
+    // 兜底：从任意 URL 行中找标注「入口」的那条
+    if (!officialApi) {
+      officialApi = getFirstMatch(content, "-\\s*(https?://[^/\\s#]+)[^\\n]*入口");
+    }
     if (officialApi) {
       const url = new URL(officialApi);
       const ip = await getRealIpViaApi(url.hostname);
