@@ -1,4 +1,4 @@
-export const APP_VERSION = "0.5.0";
+export const APP_VERSION = "0.6.0";
 
 export interface ChangelogEntry {
   version: string;
@@ -7,6 +7,18 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "0.6.0",
+    date: "2026-05-18",
+    changes: [
+      "新增 颜色工具分类",
+      "新增 取色器工具（支持颜色选择与十六进制 RGB 值获取）",
+      "支持透明度选择（0%-100%，步进 10%）",
+      "输出 #AARRGGBB 格式（如 #CCFFFFFF 表示 80% 透明度白色）",
+      "支持颜色预览（含棋盘格透明度背景）",
+      "支持一键复制 HEX 值和 ARGB 值",
+    ],
+  },
   {
     version: "0.5.0",
     date: "2026-05-17",

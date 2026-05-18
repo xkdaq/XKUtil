@@ -3,12 +3,14 @@ import { jsonTools } from "./json";
 import { cryptoTools } from "./crypto";
 import { textTools } from "./text";
 import { convertTools } from "./convert";
+import { colorTools } from "./color";
 
 const allTools: ToolDefinition[] = [
   ...jsonTools,
   ...cryptoTools,
   ...textTools,
   ...convertTools,
+  ...colorTools,
 ];
 
 export function getToolCategories(): ToolCategory[] {
@@ -41,6 +43,7 @@ function getCategoryName(categoryId: string): string {
     network: "网络工具",
     crypto: "加密工具",
     convert: "格式转换",
+    color: "颜色工具",
   };
   return names[categoryId] ?? categoryId;
 }
