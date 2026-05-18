@@ -15,6 +15,7 @@ src-tauri/target/
 # IDE
 .vscode/
 .idea/
+.qoder/
 *.swp
 *.swo
 *~
