@@ -54,8 +54,11 @@ function getTypeTag(value: unknown) {
 function jsonToTreeData(
   value: unknown,
   key: string,
-  path: string
+  path: string,
+  valueMap: Map<string, unknown>
 ): TreeDataNode {
+  valueMap.set(path, value);
+
   if (value === null || typeof value !== "object") {
     const displayValue =
       typeof value === "string" ? `"${value}"` : String(value);
@@ -81,7 +84,7 @@ function jsonToTreeData(
         </span>
       ),
       children: value.map((item, index) =>
-        jsonToTreeData(item, `[${index}]`, `${path}.[${index}]`)
+        jsonToTreeData(item, `[${index}]`, `${path}.[${index}]`, valueMap)
       ),
     };
   }
@@ -95,7 +98,7 @@ function jsonToTreeData(
       </span>
     ),
     children: Object.entries(obj).map(([k, v]) =>
-      jsonToTreeData(v, k, `${path}.${k}`)
+      jsonToTreeData(v, k, `${path}.${k}`, valueMap)
     ),
   };
 }
@@ -119,16 +122,17 @@ export default function JsonTreeView() {
   const [error, setError] = useState<string | null>(null);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
-  const treeData = useMemo(() => {
-    if (!input.trim()) return [];
+  const { treeData, valueMap } = useMemo(() => {
+    if (!input.trim()) return { treeData: [], valueMap: new Map<string, unknown>() };
     const result = parseJson(input);
     if (!result.success) {
       setError(result.message);
-      return [];
+      return { treeData: [], valueMap: new Map<string, unknown>() };
     }
     setError(null);
-    const nodes = [jsonToTreeData(result.data, "root", "root")];
-    return nodes;
+    const map = new Map<string, unknown>();
+    const nodes = [jsonToTreeData(result.data, "root", "root", map)];
+    return { treeData: nodes, valueMap: map };
   }, [input]);
 
   const allKeys = useMemo(() => getAllKeys(treeData), [treeData]);
@@ -141,14 +145,18 @@ export default function JsonTreeView() {
     setExpandedKeys([]);
   }, []);
 
-  const handleCopyPath = useCallback(
+  const handleCopyValue = useCallback(
     (key: string) => {
-      const path = key.replace(/^root\.?/, "$");
-      navigator.clipboard.writeText(path || "$").then(() => {
-        message.success(`已复制路径: ${path || "$"}`);
+      const value = valueMap.get(key);
+      const text =
+        typeof value === "string"
+          ? value
+          : JSON.stringify(value, null, 2);
+      navigator.clipboard.writeText(text).then(() => {
+        message.success("已复制");
       });
     },
-    []
+    [valueMap]
   );
 
   // Auto-expand root on first valid parse
@@ -227,7 +235,7 @@ export default function JsonTreeView() {
                         style={{ fontSize: 11, color: "#999", cursor: "pointer" }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleCopyPath(node.key as string);
+                          handleCopyValue(node.key as string);
                         }}
                       />
                     </span>
